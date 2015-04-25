@@ -150,6 +150,8 @@ libunwind_la_SOURCES_os_hpux = os-hpux.c
 
 libunwind_la_SOURCES_os_freebsd = os-freebsd.c
 
+libunwind_la_SOURCES_os_netbsd = os-netbsd.c
+
 libunwind_la_SOURCES_os_qnx = os-qnx.c
 
 libunwind_dwarf_common_la_SOURCES = dwarf/global.c
@@ -481,6 +483,17 @@ if OS_FREEBSD
  libunwind_coredump_la_SOURCES += coredump/_UCD_access_reg_freebsd.c
 endif
 
+if OS_NETBSD
+ libunwind_la_SOURCES_os	= $(libunwind_la_SOURCES_os_netbsd)
+ libunwind_la_SOURCES_os_local	= $(libunwind_la_SOURCES_os_netbsd_local)
+ libunwind_la_SOURCES_x86_os          = x86/Gos-netbsd.c
+ libunwind_x86_la_SOURCES_os	      = x86/getcontext-netbsd.S
+ libunwind_la_SOURCES_x86_os_local    = x86/Los-netbsd.c
+ libunwind_la_SOURCES_x86_64_os       = x86_64/Gos-netbsd.c
+ libunwind_la_SOURCES_x86_64_os_local = x86_64/Los-netbsd.c
+ libunwind_coredump_la_SOURCES += coredump/_UCD_access_reg_netbsd.c
+endif
+
 if OS_QNX
  libunwind_la_SOURCES_os	= $(libunwind_la_SOURCES_os_qnx)
  libunwind_la_SOURCES_os_local	= $(libunwind_la_SOURCES_os_qnx_local)
@@ -667,6 +680,7 @@ EXTRA_DIST =	$(libunwind_la_SOURCES_aarch64)			\
 		$(libunwind_la_SOURCES_sh)			\
 		$(libunwind_la_SOURCES_x86)			\
 		$(libunwind_la_SOURCES_os_freebsd)		\
+		$(libunwind_la_SOURCES_os_netbsd)		\
 		$(libunwind_la_SOURCES_os_linux)		\
 		$(libunwind_la_SOURCES_os_hpux)			\
 		$(libunwind_la_SOURCES_os_qnx)			\

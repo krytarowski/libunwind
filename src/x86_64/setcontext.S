@@ -29,7 +29,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.  */
 #include <asm/unistd.h>
 #define	SIG_SETMASK   2
 #define	SIGSET_BYTE_SIZE   (64/8)
-#elif defined __FreeBSD__
+#elif defined(__FreeBSD__) || defined(__NetBSD__)
 #include <sys/syscall.h>
 #endif
 
@@ -61,6 +61,24 @@ _Ux86_64_setcontext:
 	fldenv (%r8)
 	ldmxcsr FPREGS_OFFSET_MXCSR(%r8)
 #elif defined __FreeBSD__
+	/* restore signal mask */
+	pushq	%rdi
+	xorl	%edx,%edx
+	leaq	UC_SIGMASK(%rdi),%rsi
+	movl	$3,%edi/* SIG_SETMASK */
+	movl	$SYS_sigprocmask,%eax
+	movq	%rcx,%r10
+	syscall
+	popq	%rdi
+
+	/* restore fp state */
+	cmpq $UC_MCONTEXT_FPOWNED_FPU,UC_MCONTEXT_OWNEDFP(%rdi)
+	jne 1f
+	cmpq $UC_MCONTEXT_FPFMT_XMM,UC_MCONTEXT_FPFORMAT(%rdi)
+	jne 1f
+	fxrstor UC_MCONTEXT_FPSTATE(%rdi)
+1:
+#elif defined __NetBSD__
 	/* restore signal mask */
 	pushq	%rdi
 	xorl	%edx,%edx
