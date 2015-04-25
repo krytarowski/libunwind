@@ -6,7 +6,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <unistd.h>
-#ifdef __FreeBSD__
+#if defined(__FreeBSD__) || defined(__NetBSD__)
 #include <sys/types.h>
 #include <sys/sysctl.h>
 #include <sys/user.h>
@@ -40,7 +40,7 @@ void write_maps(char *fname)
     fclose(out);
     fclose(maps);
 }
-#elif defined(__FreeBSD__)
+#elif defined(__FreeBSD__) || defined(__NetBSD__)
 void
 write_maps(char *fname)
 {
@@ -121,4 +121,3 @@ main (int argc, char **argv)
   b(0);
   return 0;
 }
-

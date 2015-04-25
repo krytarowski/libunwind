@@ -32,7 +32,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.  */
 #define JB_MASK_SAVED   8
 #define JB_MASK         9
 
-#elif defined __FreeBSD__
+#elif defined(__FreeBSD__) || defined(__NetBSD__)
 
 #define JB_SP           2
 #define JB_RP           0

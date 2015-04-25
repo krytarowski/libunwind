@@ -218,7 +218,7 @@ void handle_sigsegv(int sig, siginfo_t *info, void *ucontext)
 #elif defined(UNW_TARGET_ARM)
 	ip = uc->uc_mcontext.arm_pc;
 #endif
-#elif defined(__FreeBSD__)
+#elif defined(__FreeBSD__) || defined(__NetBSD__)
 #ifdef __i386__
 	ip = uc->uc_mcontext.mc_eip;
 #elif defined(__amd64__)

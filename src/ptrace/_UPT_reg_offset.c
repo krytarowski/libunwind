@@ -250,7 +250,7 @@ const int _UPT_reg_offset[UNW_REG_LAST + 1] =
 
     [UNW_HPPA_IP]       = 0x1a8         /* IAOQ[0] */
 #elif defined(UNW_TARGET_X86)
-#if defined __FreeBSD__
+#if defined(__FreeBSD__) || defined(__NetBSD__)
 #define UNW_R_OFF(R, r) \
     [UNW_X86_##R]       = offsetof(gregset_t, r_##r),
     UNW_R_OFF(EAX, eax)
@@ -287,7 +287,7 @@ const int _UPT_reg_offset[UNW_REG_LAST + 1] =
 #error Port me
 #endif
 #elif defined(UNW_TARGET_X86_64)
-#if defined __FreeBSD__
+#if defined(__FreeBSD__)|| defined(__NetBSD__)
 #define UNW_R_OFF(R, r) \
     [UNW_X86_64_##R]    = offsetof(gregset_t, r_##r),
     UNW_R_OFF(RAX, rax)

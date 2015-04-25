@@ -44,7 +44,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.  */
 #define UC_MCONTEXT_FPREGS_MEM  0xe0
 #define UC_SIGMASK              0x128
 #define FPREGS_OFFSET_MXCSR     0x18
-#elif defined __FreeBSD__
+#elif defined(__FreeBSD__) || defined(__NetBSD__)
 #define UC_SIGMASK              0x0
 #define UC_MCONTEXT_GREGS_RDI   0x18
 #define UC_MCONTEXT_GREGS_RSI   0x20

@@ -190,13 +190,13 @@ sighandler (int signal, void *siginfo UNUSED, void *context)
 #elif UNW_TARGET_X86
 #if defined __linux__
       printf (" @ %lx", (unsigned long) uc->uc_mcontext.gregs[REG_EIP]);
-#elif defined __FreeBSD__
+#elif defined(__FreeBSD__) || defined(__NetBSD__)
       printf (" @ %lx", (unsigned long) uc->uc_mcontext.mc_eip);
 #endif
 #elif UNW_TARGET_X86_64
 #if defined __linux__
       printf (" @ %lx", (unsigned long) uc->uc_mcontext.gregs[REG_RIP]);
-#elif defined __FreeBSD__
+#elif defined(__FreeBSD__) || defined(__NetBSD__)
       printf (" @ %lx", (unsigned long) uc->uc_mcontext.mc_rip);
 #endif
 #endif

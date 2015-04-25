@@ -32,7 +32,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.  */
 # define REG_INIT_LOC(c, rlc, ruc) \
     DWARF_LOC ((unw_word_t) &c->uc->uc_mcontext.gregs[REG_ ## ruc], 0)
 
-#elif defined UNW_LOCAL_ONLY && defined __FreeBSD__
+#elif defined UNW_LOCAL_ONLY && (defined(__FreeBSD__) || defined(__NetBSD__))
 # define REG_INIT_LOC(c, rlc, ruc) \
     DWARF_LOC ((unw_word_t) &c->uc->uc_mcontext.mc_ ## rlc, 0)
 

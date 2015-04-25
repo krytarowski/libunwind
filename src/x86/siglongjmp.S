@@ -28,7 +28,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.  */
 
 #if defined(__linux__)
 #define SIG_SETMASK 2
-#elif defined(__FreeBSD__)
+#elif defined(__FreeBSD__) || defined(__NetBSD__)
 #define SIG_SETMASK 3
 #endif
 
@@ -70,7 +70,7 @@ _UI_siglongjmp_cont:
 	lea 8(%esp), %esp	/* pop sigmask */
 	.cfi_adjust_cfa_offset -4
 	jmp *%edx
-#elif defined(__FreeBSD__)
+#elif defined(__FreeBSD__) || defined(__NetBSD__)
 	pushl	%eax
 	pushl	%edx
 	pushl	$0
