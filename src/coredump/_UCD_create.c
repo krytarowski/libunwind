@@ -61,7 +61,9 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.  */
 #endif
 
 #include <elf.h>
+#if !defined(__NetBSD__)
 #include <sys/procfs.h> /* struct elf_prstatus */
+#endif
 
 #include "_UCD_lib.h"
 #include "_UCD_internal.h"
