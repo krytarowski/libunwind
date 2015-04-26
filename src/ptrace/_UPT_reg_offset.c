@@ -28,6 +28,11 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.  */
 
 #include <stddef.h>
 
+#if defined(__NetBSD__)
+#include <machine/reg.h>
+#include <machine/mcontext.h>
+#endif
+
 #ifdef HAVE_ASM_PTRACE_OFFSETS_H
 # include <asm/ptrace_offsets.h>
 #endif
@@ -266,21 +271,17 @@ const int _UPT_reg_offset[UNW_REG_LAST + 1] =
 //  UNW_R_OFF(EFLAGS, eflags)
 //  UNW_R_OFF(SS, ss)
 #elif defined(__NetBSD__)
-#include <machine/reg.h>
-#define UNW_R_OFF(R, r) \
-    [UNW_X86_##R]       = offsetof(struct reg, _REG_##R),
-    UNW_R_OFF(EAX, eax)
-    UNW_R_OFF(EDX, edx)
-    UNW_R_OFF(ECX, ecx)
-    UNW_R_OFF(EBX, ebx)
-    UNW_R_OFF(ESI, esi)
-    UNW_R_OFF(EDI, edi)
-    UNW_R_OFF(EBP, ebp)
-    UNW_R_OFF(ESP, esp)
-    UNW_R_OFF(EIP, eip)
-//  UNW_R_OFF(CS, cs)
-//  UNW_R_OFF(EFLAGS, eflags)
-//  UNW_R_OFF(SS, ss)
+#define UNW_R_OFF(R, offset) \
+    [UNW_X86_##R]       = ((offset) * 8),
+    UNW_R_OFF(EAX, 14)
+    UNW_R_OFF(EBX, 3)
+    UNW_R_OFF(ECX, 2)
+    UNW_R_OFF(EDX, 13)
+    UNW_R_OFF(ESP, 24)
+    UNW_R_OFF(EBP, 12)
+    UNW_R_OFF(ESI, 1)
+    UNW_R_OFF(EDI, 0)
+    UNW_R_OFF(EIP, 21)
 #elif defined __linux__
     [UNW_X86_EAX]       = 0x18,
     [UNW_X86_EBX]       = 0x00,
@@ -328,29 +329,27 @@ const int _UPT_reg_offset[UNW_REG_LAST + 1] =
 //  UNW_R_OFF(SS, ss)
 #undef UNW_R_OFF
 #elif defined(__NetBSD__)
-#include <machine/reg.h>
-#define UNW_R_OFF(R, r) \
-    [UNW_X86_64_##R]    = offsetof(struct reg, _REG_##R),
-    UNW_R_OFF(RAX, rax)
-    UNW_R_OFF(RDX, rdx)
-    UNW_R_OFF(RCX, rcx)
-    UNW_R_OFF(RBX, rbx)
-    UNW_R_OFF(RSI, rsi)
-    UNW_R_OFF(RDI, rdi)
-    UNW_R_OFF(RBP, rbp)
-    UNW_R_OFF(RSP, rsp)
-    UNW_R_OFF(R8, r8)
-    UNW_R_OFF(R9, r9)
-    UNW_R_OFF(R10, r10)
-    UNW_R_OFF(R11, r11)
-    UNW_R_OFF(R12, r12)
-    UNW_R_OFF(R13, r13)
-    UNW_R_OFF(R14, r14)
-    UNW_R_OFF(R15, r15)
-    UNW_R_OFF(RIP, rip)
-//  UNW_R_OFF(CS, cs)
-//  UNW_R_OFF(EFLAGS, rflags)
-//  UNW_R_OFF(SS, ss)
+// See gdb/amd64nbsd-nat.c
+// See src/sys/arch/amd64/include/frame_regs.h
+#define UNW_R_OFF(R, offset) \
+    [UNW_X86_64_##R]       = ((offset) * 8),
+    UNW_R_OFF(RAX, 14)
+    UNW_R_OFF(RBX, 3)
+    UNW_R_OFF(RCX, 2)
+    UNW_R_OFF(RDX, 13)
+    UNW_R_OFF(RSP, 24)
+    UNW_R_OFF(RBP, 12)
+    UNW_R_OFF(RSI, 1)
+    UNW_R_OFF(RDI, 0)
+    UNW_R_OFF(RIP, 21)
+    UNW_R_OFF(R8, 4)
+    UNW_R_OFF(R9, 5)
+    UNW_R_OFF(R10, 6)
+    UNW_R_OFF(R11, 7)
+    UNW_R_OFF(R12, 8)
+    UNW_R_OFF(R13, 9)
+    UNW_R_OFF(R14, 10)
+    UNW_R_OFF(R15, 11)
 #undef UNW_R_OFF
 #elif defined __linux__
     [UNW_X86_64_RAX]    = 0x50,
