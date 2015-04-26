@@ -67,13 +67,21 @@ _UPT_access_fpreg (unw_addr_space_t as, unw_regnum_t reg, unw_fpreg_t *val,
   return 0;
 }
 #elif HAVE_DECL_PT_GETFPREGS
+#if defined(__NetBSD__)
+#include <machine/reg.h>
+#endif
 int
 _UPT_access_fpreg (unw_addr_space_t as, unw_regnum_t reg, unw_fpreg_t *val,
                    int write, void *arg)
 {
   struct UPT_info *ui = arg;
   pid_t pid = ui->pid;
+
+#if defined(__FreeBSD__)
   fpregset_t fpreg;
+#elif defined(__NetBSD__)
+  struct fpreg fpreg;
+#endif
 
   if ((unsigned) reg >= ARRAY_SIZE (_UPT_reg_offset))
     return -UNW_EBADREG;
@@ -81,6 +89,7 @@ _UPT_access_fpreg (unw_addr_space_t as, unw_regnum_t reg, unw_fpreg_t *val,
   if (ptrace(PT_GETFPREGS, pid, (caddr_t)&fpreg, 0) == -1)
           return -UNW_EBADREG;
   if (write) {
+#if defined(__FreeBSD__)
 #if defined(__amd64__)
           memcpy(&fpreg.fpr_xacc[reg], val, sizeof(unw_fpreg_t));
 #elif defined(__i386__)
@@ -88,13 +97,24 @@ _UPT_access_fpreg (unw_addr_space_t as, unw_regnum_t reg, unw_fpreg_t *val,
 #else
 #error Fix me
 #endif
+#elif defined(__NetBSD__)
+          memcpy((char*)&fpreg.fxstate + (16 * reg), val, sizeof(unw_fpreg_t));
+#else
+#error Fix me
+#endif
           if (ptrace(PT_SETFPREGS, pid, (caddr_t)&fpreg, 0) == -1)
                   return -UNW_EBADREG;
   } else
+#if defined(__FreeBSD__)
 #if defined(__amd64__)
           memcpy(val, &fpreg.fpr_xacc[reg], sizeof(unw_fpreg_t));
 #elif defined(__i386__)
           memcpy(val, &fpreg.fpr_acc[reg], sizeof(unw_fpreg_t));
+#else
+#error Fix me
+#endif
+#elif defined(__NetBSD__)
+          memcpy(val, (char*)&fpreg.fxstate + (16 * reg), sizeof(unw_fpreg_t));
 #else
 #error Fix me
 #endif
