@@ -265,7 +265,7 @@ const int _UPT_reg_offset[UNW_REG_LAST + 1] =
 //  UNW_R_OFF(CS, cs)
 //  UNW_R_OFF(EFLAGS, eflags)
 //  UNW_R_OFF(SS, ss)
-#if defined(__NetBSD__)
+#elif defined(__NetBSD__)
 #include <machine/reg.h>
 #define UNW_R_OFF(R, r) \
     [UNW_X86_##R]       = offsetof(struct reg, _REG_##R),
