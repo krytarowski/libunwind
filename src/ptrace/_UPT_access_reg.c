@@ -281,7 +281,7 @@ _UPT_access_reg (unw_addr_space_t as, unw_regnum_t reg, unw_word_t *val,
 #if defined(__FreeBSD__)
   gregset_t regs;
 #elif defined(__NetBSD__)
-  struct fpreg fpreg;
+  struct reg regs;
 #endif
   char *r;
 
