@@ -269,13 +269,20 @@ _UPT_access_reg (unw_addr_space_t as, unw_regnum_t reg, unw_word_t *val,
   return -UNW_EBADREG;
 }
 #elif HAVE_DECL_PT_GETREGS
+#if defined(__NetBSD__)
+#include <machine/reg.h>
+#endif
 int
 _UPT_access_reg (unw_addr_space_t as, unw_regnum_t reg, unw_word_t *val,
                  int write, void *arg)
 {
   struct UPT_info *ui = arg;
   pid_t pid = ui->pid;
+#if defined(__FreeBSD__)
   gregset_t regs;
+#elif defined(__NetBSD__)
+  struct fpreg fpreg;
+#endif
   char *r;
 
 #if UNW_DEBUG
