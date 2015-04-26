@@ -250,9 +250,24 @@ const int _UPT_reg_offset[UNW_REG_LAST + 1] =
 
     [UNW_HPPA_IP]       = 0x1a8         /* IAOQ[0] */
 #elif defined(UNW_TARGET_X86)
-#if defined(__FreeBSD__) || defined(__NetBSD__)
+#if defined(__FreeBSD__)
 #define UNW_R_OFF(R, r) \
     [UNW_X86_##R]       = offsetof(gregset_t, r_##r),
+    UNW_R_OFF(EAX, eax)
+    UNW_R_OFF(EDX, edx)
+    UNW_R_OFF(ECX, ecx)
+    UNW_R_OFF(EBX, ebx)
+    UNW_R_OFF(ESI, esi)
+    UNW_R_OFF(EDI, edi)
+    UNW_R_OFF(EBP, ebp)
+    UNW_R_OFF(ESP, esp)
+    UNW_R_OFF(EIP, eip)
+//  UNW_R_OFF(CS, cs)
+//  UNW_R_OFF(EFLAGS, eflags)
+//  UNW_R_OFF(SS, ss)
+#if defined(__NetBSD__)
+#define UNW_R_OFF(R, r) \
+    [UNW_X86_##R]       = offsetof(struct reg, _REG_##R),
     UNW_R_OFF(EAX, eax)
     UNW_R_OFF(EDX, edx)
     UNW_R_OFF(ECX, ecx)
