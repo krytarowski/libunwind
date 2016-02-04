@@ -122,7 +122,7 @@ AC_MSG_RESULT([$enable_ptrace])
 
 AC_ARG_ENABLE(setjmp,
 	AS_HELP_STRING([--enable-setjmp],[building libunwind-setjmp library]),,
-        [AS_IF([test x$target_arch == x$host_arch], [enable_setjmp=yes], [enable_setjmp=no])]
+        [AS_IF([test x$target_arch = x$host_arch], [enable_setjmp=yes], [enable_setjmp=no])]
 )
 
 AC_ARG_ENABLE(documentation,
